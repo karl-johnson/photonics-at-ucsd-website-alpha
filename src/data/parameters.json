@@ -1,0 +1,8 @@
+[
+  { "key": "budget",                 "label": "Budget",                  "description": "0 = free, 10 = expensive. Estimated materials cost." },
+  { "key": "complexity",             "label": "Concept Complexity",      "description": "0 = elementary, 10 = university-level physics required." },
+  { "key": "manufacturingDifficulty","label": "Build Difficulty",        "description": "0 = no tools needed, 10 = machine shop required." },
+  { "key": "outreachImpact",         "label": "Outreach Impact",         "description": "Subjective wow-factor and engagement for audiences." },
+  { "key": "setupTime",              "label": "Setup Time",              "description": "0 = instant, 10 = requires hours of setup per event." },
+  { "key": "portability",            "label": "Portability",             "description": "0 = fixed installation, 10 = fits in a backpack." }
+]

@@ -1,0 +1,104 @@
+[
+  {
+    "id": "single-slit-diffraction",
+    "title": "Single-Slit Diffraction Demonstrator",
+    "tagline": "Visualize wave interference with a laser and adjustable slit",
+    "description": "A tabletop apparatus that lets students adjust slit width and observe how the diffraction pattern changes on a projection screen. Built from laser-cut acrylic and a cheap laser pointer, this is a crowd-pleasing demo that makes abstract wave optics tangible.",
+    "image": null,
+    "docsUrl": "https://docs.google.com/",
+    "parameters": {
+      "budget": 2,
+      "complexity": 2,
+      "manufacturingDifficulty": 2,
+      "outreachImpact": 9,
+      "setupTime": 2,
+      "portability": 9
+    },
+    "tags": ["wave optics", "laser", "diffraction", "beginner"]
+  },
+  {
+    "id": "spectrometer",
+    "title": "CD Grating Spectrometer",
+    "tagline": "Turn a smartphone and a CD into a lab-grade spectrometer",
+    "description": "A cardboard and CD spectrometer that connects to a smartphone camera. Students can capture emission spectra from fluorescent lights, LEDs, and flames. Includes a calibration guide and companion worksheet for measuring wavelengths.",
+    "image": null,
+    "docsUrl": "https://docs.google.com/",
+    "parameters": {
+      "budget": 1,
+      "complexity": 3,
+      "manufacturingDifficulty": 2,
+      "outreachImpact": 8,
+      "setupTime": 3,
+      "portability": 10
+    },
+    "tags": ["spectroscopy", "smartphone", "low-cost", "beginner"]
+  },
+  {
+    "id": "newtonian-telescope",
+    "title": "Newtonian Telescope Kit",
+    "tagline": "A fully functional 4.5\" reflector built from machined parts",
+    "description": "A modular Newtonian reflector with a 4.5-inch parabolic mirror. All structural parts are designed for CNC routing and 3D printing. Includes optical alignment guides, eyepiece adapter designs, and curriculum for a three-session telescope-building workshop.",
+    "image": null,
+    "docsUrl": "https://docs.google.com/",
+    "parameters": {
+      "budget": 7,
+      "complexity": 8,
+      "manufacturingDifficulty": 8,
+      "outreachImpact": 10,
+      "setupTime": 7,
+      "portability": 4
+    },
+    "tags": ["astronomy", "mirrors", "CNC", "advanced"]
+  },
+  {
+    "id": "schlieren-imaging",
+    "title": "Schlieren Imaging Setup",
+    "tagline": "Make heat and airflow visible with mirrors and a point light source",
+    "description": "Schlieren imaging reveals invisible refractive index gradients in air — flames, breath, and turbulence become visible. This single-mirror design uses a concave mirror, a pinhole, and a phone camera. Stunning for demonstrations and deeply educational about light-matter interaction.",
+    "image": null,
+    "docsUrl": "https://docs.google.com/",
+    "parameters": {
+      "budget": 5,
+      "complexity": 6,
+      "manufacturingDifficulty": 4,
+      "outreachImpact": 10,
+      "setupTime": 5,
+      "portability": 3
+    },
+    "tags": ["imaging", "fluid dynamics", "mirrors", "intermediate"]
+  },
+  {
+    "id": "polarization-kit",
+    "title": "Polarization Exploration Kit",
+    "tagline": "Six hands-on demos with polarizing film and everyday materials",
+    "description": "A kit built around sheets of polarizing film, a white LED backlight panel, and a collection of birefringent materials (tape, cellophane, mica). Guides six modular demos from Malus's Law to stress visualization in plastic. Designed for concurrent use at multiple stations.",
+    "image": null,
+    "docsUrl": "https://docs.google.com/",
+    "parameters": {
+      "budget": 3,
+      "complexity": 4,
+      "manufacturingDifficulty": 1,
+      "outreachImpact": 7,
+      "setupTime": 1,
+      "portability": 9
+    },
+    "tags": ["polarization", "birefringence", "modular", "beginner"]
+  },
+  {
+    "id": "optical-fiber-demo",
+    "title": "Total Internal Reflection Fiber Demo",
+    "tagline": "Bend light through a water stream and a plastic fiber bundle",
+    "description": "Two complementary demos: a laminar water stream that guides a laser by TIR, and a DIY plastic optical fiber bundle that transmits images. Together they build intuition for how fiber-optic communication works. Suitable for any age group from middle school to undergrad.",
+    "image": null,
+    "docsUrl": "https://docs.google.com/",
+    "parameters": {
+      "budget": 4,
+      "complexity": 3,
+      "manufacturingDifficulty": 3,
+      "outreachImpact": 8,
+      "setupTime": 4,
+      "portability": 6
+    },
+    "tags": ["fiber optics", "TIR", "laser", "intermediate"]
+  }
+]

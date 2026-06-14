@@ -1,0 +1,180 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="About" description="About OpenOptics — open-source optics demos for educational outreach.">
+  <div class="about-page">
+
+    <header class="about-header">
+      <p class="eyebrow">Who we are</p>
+      <h1>Building open-source optics for educational outreach</h1>
+    </header>
+
+    <div class="about-body">
+      <div class="about-main">
+        <section class="section">
+          <h2>Our mission</h2>
+          <p>
+            OpenOptics is a student organization dedicated to making hands-on optics education accessible to everyone. We design, build, and document open-source optical instruments and demonstration apparatus — then share everything freely so that any school, club, or outreach group can replicate them.
+          </p>
+          <p>
+            All of our project plans are released under open licenses. If you build something from our guides, improve it, and share your improvements back, we'd love to feature your work.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>How to use this site</h2>
+          <p>
+            The Projects page lets you explore our library visually. Use the scatter plot to compare projects across parameters like budget, complexity, and portability — then click any point (or card) to read about that specific project and access its full build documentation.
+          </p>
+          <p>
+            Each project page links out to a Google Doc or PDF with step-by-step build instructions, materials lists, and curriculum suggestions.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>Contributing</h2>
+          <p>
+            This website and all project documentation live on GitHub. To add a new project, update parameter ratings, or fix a typo, open a pull request. New project entries are added by editing a single JSON file — no web development experience required.
+          </p>
+          <a href="https://github.com/" target="_blank" rel="noopener" class="github-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            View on GitHub
+          </a>
+        </section>
+      </div>
+
+      <aside class="about-sidebar">
+        <div class="info-card">
+          <div class="info-stat">
+            <span class="stat-number">6</span>
+            <span class="stat-label">Projects published</span>
+          </div>
+          <div class="info-stat">
+            <span class="stat-number">6</span>
+            <span class="stat-label">Parameters per project</span>
+          </div>
+          <div class="info-stat">
+            <span class="stat-number">∞</span>
+            <span class="stat-label">Free to use &amp; modify</span>
+          </div>
+        </div>
+        <div class="license-note">
+          <span class="mono-label">License</span>
+          <p>Project documentation is released under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Hardware designs under <a href="https://cern-ohl.web.cern.ch/" target="_blank" rel="noopener">CERN-OHL-S</a>. Website source under MIT.</p>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+.about-page { max-width: 1100px; margin: 0 auto; padding: 3.5rem 2rem 5rem; }
+
+.about-header { max-width: 620px; margin-bottom: 3rem; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--violet);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.7rem;
+}
+.about-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.about-body {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  .about-body { grid-template-columns: 1fr; }
+}
+
+.about-main { display: flex; flex-direction: column; gap: 2.25rem; }
+
+.section h2 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+.section p {
+  color: var(--text-muted);
+  line-height: 1.75;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+.section p:last-child { margin-bottom: 0; }
+
+.github-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  margin-top: 0.5rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+.github-link:hover { border-color: var(--violet); color: var(--blue); }
+
+/* Sidebar */
+.about-sidebar { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 72px; }
+
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+.info-stat { display: flex; flex-direction: column; gap: 0.2rem; }
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--violet);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.license-note {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+.mono-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--violet);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.license-note p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+.license-note a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+.license-note a:hover { color: var(--violet); }
+</style>

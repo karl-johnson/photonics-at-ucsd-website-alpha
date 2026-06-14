@@ -1,0 +1,436 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import projects from '../data/projects.json';
+import parameters from '../data/parameters.json';
+
+const projectsJson = JSON.stringify(projects);
+const parametersJson = JSON.stringify(parameters);
+---
+<BaseLayout title="Projects">
+  <div class="page">
+
+    <!-- Header -->
+    <section class="page-header">
+      <p class="eyebrow">Project Library</p>
+      <h1>Find the right demo for your outreach</h1>
+      <p class="subtitle">
+        Browse {projects.length} open-source optics projects. Compare them visually by any two parameters, or scroll through the list below.
+      </p>
+    </section>
+
+    <!-- Scatter Plot -->
+    <section class="plot-section">
+      <div class="axis-selectors">
+        <div class="axis-control">
+          <label for="x-axis">X axis</label>
+          <select id="x-axis">
+            {parameters.map(p => (
+              <option value={p.key} selected={p.key === 'budget'}>{p.label}</option>
+            ))}
+          </select>
+        </div>
+        <div class="axis-control">
+          <label for="y-axis">Y axis</label>
+          <select id="y-axis">
+            {parameters.map(p => (
+              <option value={p.key} selected={p.key === 'outreachImpact'}>{p.label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div class="plot-container">
+        <canvas id="scatter-plot"></canvas>
+        <div id="plot-tooltip" class="plot-tooltip" role="tooltip"></div>
+      </div>
+      <p class="plot-hint">Click a point to view project details</p>
+    </section>
+
+    <!-- Project Cards -->
+    <section class="cards-section">
+      <h2>All Projects <span class="count">{projects.length}</span></h2>
+      <div class="cards-grid" id="cards-grid">
+        {projects.map(project => (
+          <a href={`/projects/${project.id}`} class="card" data-id={project.id}>
+            <div class="card-img-placeholder">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+                <path d="M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" opacity="0.5"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">{project.title}</h3>
+              <p class="card-tagline">{project.tagline}</p>
+              <div class="card-tags">
+                {project.tags.slice(0, 3).map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+              <div class="card-params">
+                {Object.entries(project.parameters).slice(0, 3).map(([key, val]) => {
+                  const param = parameters.find(p => p.key === key);
+                  return (
+                    <div class="param-chip">
+                      <span class="param-label">{param?.label ?? key}</span>
+                      <div class="param-bar">
+                        <div class="param-fill" style={`width: ${val * 10}%`}></div>
+                      </div>
+                      <span class="param-val">{val}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<script define:vars={{ projectsJson, parametersJson }}>
+const projects = JSON.parse(projectsJson);
+const parameters = JSON.parse(parametersJson);
+
+const canvas = document.getElementById('scatter-plot');
+const tooltip = document.getElementById('plot-tooltip');
+const xSelect = document.getElementById('x-axis');
+const ySelect = document.getElementById('y-axis');
+
+let hoveredId = null;
+
+const COLORS = {
+  dot:       '#7c6af7',
+  dotHover:  '#a8c5f0',
+  dotStroke: 'rgba(124,106,247,0.4)',
+  grid:      'rgba(31, 45, 69, 0.8)',
+  label:     '#8892a4',
+  text:      '#e8edf5',
+};
+
+function getParam(project, key) {
+  return project.parameters[key] ?? 0;
+}
+
+function drawPlot() {
+  const xKey = xSelect.value;
+  const yKey = ySelect.value;
+  const xLabel = parameters.find(p => p.key === xKey)?.label ?? xKey;
+  const yLabel = parameters.find(p => p.key === yKey)?.label ?? yKey;
+
+  const dpr = window.devicePixelRatio || 1;
+  const container = canvas.parentElement;
+  const W = container.clientWidth;
+  const H = Math.min(420, window.innerHeight * 0.45);
+
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 24, right: 32, bottom: 52, left: 56 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top  - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = COLORS.grid;
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 10; i += 2) {
+    const gx = pad.left + (i / 10) * plotW;
+    const gy = pad.top  + (1 - i / 10) * plotH;
+    ctx.beginPath(); ctx.moveTo(gx, pad.top); ctx.lineTo(gx, pad.top + plotH); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(pad.left + plotW, gy); ctx.stroke();
+  }
+
+  // Axis labels (values)
+  ctx.fillStyle = COLORS.label;
+  ctx.font = `11px 'JetBrains Mono', monospace`;
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= 10; i += 2) {
+    const gx = pad.left + (i / 10) * plotW;
+    ctx.fillText(i, gx, H - pad.bottom + 16);
+  }
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 10; i += 2) {
+    const gy = pad.top + (1 - i / 10) * plotH;
+    ctx.fillText(i, pad.left - 10, gy + 4);
+  }
+
+  // Axis titles
+  ctx.fillStyle = COLORS.label;
+  ctx.font = `500 12px 'Inter', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText(xLabel, pad.left + plotW / 2, H - 8);
+
+  ctx.save();
+  ctx.translate(14, pad.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(yLabel, 0, 0);
+  ctx.restore();
+
+  // Dots
+  projects.forEach(project => {
+    const x = pad.left + (getParam(project, xKey) / 10) * plotW;
+    const y = pad.top  + (1 - getParam(project, yKey) / 10) * plotH;
+    const isHovered = hoveredId === project.id;
+    const r = isHovered ? 10 : 7;
+
+    // Glow
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
+    gradient.addColorStop(0, isHovered ? 'rgba(168,197,240,0.35)' : 'rgba(124,106,247,0.25)');
+    gradient.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(x, y, r * 3, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Dot
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = isHovered ? COLORS.dotHover : COLORS.dot;
+    ctx.fill();
+    ctx.strokeStyle = isHovered ? 'rgba(168,197,240,0.6)' : COLORS.dotStroke;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+}
+
+function getHitProject(mx, my) {
+  const xKey = xSelect.value;
+  const yKey = ySelect.value;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width;
+  const H = rect.height;
+  const pad = { top: 24, right: 32, bottom: 52, left: 56 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top  - pad.bottom;
+
+  for (const project of projects) {
+    const x = pad.left + (getParam(project, xKey) / 10) * plotW;
+    const y = pad.top  + (1 - getParam(project, yKey) / 10) * plotH;
+    const dx = mx - x;
+    const dy = my - y;
+    if (Math.sqrt(dx * dx + dy * dy) < 14) return project;
+  }
+  return null;
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const hit = getHitProject(mx, my);
+  hoveredId = hit ? hit.id : null;
+  canvas.style.cursor = hit ? 'pointer' : 'crosshair';
+
+  if (hit) {
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX - rect.left + 14) + 'px';
+    tooltip.style.top  = (e.clientY - rect.top  - 10) + 'px';
+    tooltip.innerHTML  = `<strong>${hit.title}</strong><br><span>${hit.tagline}</span>`;
+  } else {
+    tooltip.style.display = 'none';
+  }
+  drawPlot();
+});
+
+canvas.addEventListener('mouseleave', () => {
+  hoveredId = null;
+  tooltip.style.display = 'none';
+  drawPlot();
+});
+
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const hit = getHitProject(mx, my);
+  if (hit) window.location.href = `/projects/${hit.id}`;
+});
+
+xSelect.addEventListener('change', drawPlot);
+ySelect.addEventListener('change', drawPlot);
+window.addEventListener('resize', drawPlot);
+
+drawPlot();
+</script>
+
+<style>
+.page { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+.page-header {
+  padding: 3.5rem 0 2.5rem;
+  max-width: 600px;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--violet);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+}
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 0.85rem;
+}
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ── Plot ── */
+.plot-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+}
+.axis-selectors {
+  display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;
+}
+.axis-control {
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.axis-control label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.axis-control select {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.axis-control select:hover, .axis-control select:focus { border-color: var(--violet); }
+
+.plot-container { position: relative; }
+canvas#scatter-plot {
+  display: block;
+  width: 100%;
+  cursor: crosshair;
+  border-radius: 6px;
+}
+.plot-tooltip {
+  display: none;
+  position: absolute;
+  pointer-events: none;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  max-width: 220px;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.plot-tooltip strong { font-family: var(--font-display); font-weight: 600; color: var(--blue); }
+.plot-tooltip span { color: var(--text-muted); }
+.plot-hint {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+/* ── Cards ── */
+.cards-section h2 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.count {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+}
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+  cursor: pointer;
+}
+.card:hover {
+  border-color: var(--violet);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(124,106,247,0.15);
+}
+.card-img-placeholder {
+  height: 120px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--border);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}
+.card-img-placeholder svg { color: var(--border); }
+.card:hover .card-img-placeholder { background: rgba(124,106,247,0.06); }
+.card:hover .card-img-placeholder svg { color: var(--violet); }
+.card-body { padding: 1.1rem; display: flex; flex-direction: column; gap: 0.65rem; flex: 1; }
+.card-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+.card-tagline { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; }
+.card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.tag {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(124,106,247,0.1);
+  color: var(--violet);
+  border: 1px solid rgba(124,106,247,0.2);
+}
+.card-params { display: flex; flex-direction: column; gap: 0.4rem; margin-top: auto; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+.param-chip { display: flex; align-items: center; gap: 0.5rem; }
+.param-label { font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); width: 90px; flex-shrink: 0; }
+.param-bar { flex: 1; height: 3px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+.param-fill { height: 100%; background: var(--violet); border-radius: 2px; transition: width 0.3s; }
+.param-val { font-size: 0.7rem; font-family: var(--font-mono); color: var(--blue); width: 1.5rem; text-align: right; }
+</style>
