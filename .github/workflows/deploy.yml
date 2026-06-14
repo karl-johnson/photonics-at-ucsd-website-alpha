@@ -22,8 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          package-manager: "npm@latest" # Forces the action to run without searching for a lockfile
           cache: npm
+          package-manager-cache: false
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
