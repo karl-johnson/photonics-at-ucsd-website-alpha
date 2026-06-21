@@ -21,13 +21,14 @@ const currentPath = Astro.url.pathname;
 
     :root {
       --bg:         #0a0a0f;
-      --surface:    #111827;
+      --surface:    #161616;
       --surface-2:  #1a2235;
       --border:     #1f2d45;
       --text:       #e8edf5;
       --text-muted: #8892a4;
       --blue:       #a8c5f0;
       --violet:     #7c6af7;
+	  --laser-red:  #cc0000;
       --amber:      #f0a832;
       --glow:       rgba(124, 106, 247, 0.18);
 
@@ -58,7 +59,7 @@ const currentPath = Astro.url.pathname;
       color: var(--text);
       display: flex; align-items: center; gap: 0.5rem;
     }
-    .nav-logo .logo-accent { color: var(--violet); }
+    .nav-logo .logo-accent { color: var(--laser-red); }
     .nav-links { display: flex; gap: 0.25rem; }
     .nav-links a {
       font-family: var(--font-display);
@@ -82,7 +83,7 @@ const currentPath = Astro.url.pathname;
       font-size: 0.8rem; color: var(--text-muted);
       font-family: var(--font-mono);
     }
-    footer a { color: var(--violet); }
+    footer a { color: var(--laser-red); }
     footer a:hover { text-decoration: underline; }
 
     /* ── Scrollbar ── */
@@ -94,12 +95,13 @@ const currentPath = Astro.url.pathname;
 <body>
   <nav>
     <a href="/" class="nav-logo">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!--<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="10" cy="10" r="3" fill="var(--violet)"/>
         <path d="M10 2 L10 5 M10 15 L10 18 M2 10 L5 10 M15 10 L18 10" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"/>
         <path d="M4.22 4.22 L6.34 6.34 M13.66 13.66 L15.78 15.78 M4.22 15.78 L6.34 13.66 M13.66 6.34 L15.78 4.22" stroke="var(--blue)" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
-      </svg>
-      Open<span class="logo-accent">Optics</span>
+      </svg>-->
+	  <img src="/src/assets/logo.svg" width="50" height="50">
+      Photonics Society<span class="logo-accent">@</span>UCSD
     </a>
     <div class="nav-links">
       <a href="/" class={currentPath === "/" ? "active" : ""}>Projects</a>
@@ -110,7 +112,7 @@ const currentPath = Astro.url.pathname;
     <slot />
   </main>
   <footer>
-    <span>OpenOptics — open source educational outreach</span>
+    <span>Photonics Society at UC San Diego</span>
     <a href="https://github.com/" target="_blank" rel="noopener">GitHub ↗</a>
   </footer>
 </body>

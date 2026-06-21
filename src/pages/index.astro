@@ -50,7 +50,7 @@ const parametersJson = JSON.stringify(parameters);
       <h2>All Projects <span class="count">{projects.length}</span></h2>
       <div class="cards-grid" id="cards-grid">
         {projects.map(project => (
-          <a href={`/projects/${project.id}`} class="card" data-id={project.id}>
+          <a href={`/projects/${project.id}`} class="card" data-id={project.id} style="text-decoration: none">
             <div class="card-img-placeholder">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
                 <circle cx="12" cy="12" r="3"/>
@@ -101,9 +101,12 @@ const ySelect = document.getElementById('y-axis');
 let hoveredId = null;
 
 const COLORS = {
-  dot:       '#7c6af7',
-  dotHover:  '#a8c5f0',
-  dotStroke: 'rgba(124,106,247,0.4)',
+  dot:       '#cc0000',
+  dotStroke: 'rgba(200,0,0,0.4)',
+  dotGradientCenter: 'rgba(255,140,0,0.35)',
+  dotHover:  '#ff6600',
+  dotStrokeHover: 'rgba(255,140,0,0.35)',
+  dotGradientCenterHover: 'rgba(255,140,0,0.35)',
   grid:      'rgba(31, 45, 69, 0.8)',
   label:     '#8892a4',
   text:      '#e8edf5',
@@ -183,7 +186,7 @@ function drawPlot() {
 
     // Glow
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
-    gradient.addColorStop(0, isHovered ? 'rgba(168,197,240,0.35)' : 'rgba(124,106,247,0.25)');
+    gradient.addColorStop(0, isHovered ? COLORS.dotGradientCenterHover : COLORS.dotGradientCenter);
     gradient.addColorStop(1, 'transparent');
     ctx.beginPath();
     ctx.arc(x, y, r * 3, 0, Math.PI * 2);
@@ -195,7 +198,7 @@ function drawPlot() {
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fillStyle = isHovered ? COLORS.dotHover : COLORS.dot;
     ctx.fill();
-    ctx.strokeStyle = isHovered ? 'rgba(168,197,240,0.6)' : COLORS.dotStroke;
+    ctx.strokeStyle = isHovered ? COLORS.dotStrokeHover : COLORS.dotStroke;
     ctx.lineWidth = 2;
     ctx.stroke();
   });
@@ -272,7 +275,7 @@ drawPlot();
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--violet);
+  color: var(--laser-red);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-bottom: 0.75rem;
@@ -326,7 +329,7 @@ drawPlot();
   outline: none;
   transition: border-color 0.15s;
 }
-.axis-control select:hover, .axis-control select:focus { border-color: var(--violet); }
+.axis-control select:hover, .axis-control select:focus { border-color: var(--laser-red); }
 
 .plot-container { position: relative; }
 canvas#scatter-plot {
@@ -392,7 +395,7 @@ canvas#scatter-plot {
   cursor: pointer;
 }
 .card:hover {
-  border-color: var(--violet);
+  border-color: var(--laser-red);
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(124,106,247,0.15);
 }
@@ -407,7 +410,7 @@ canvas#scatter-plot {
 }
 .card-img-placeholder svg { color: var(--border); }
 .card:hover .card-img-placeholder { background: rgba(124,106,247,0.06); }
-.card:hover .card-img-placeholder svg { color: var(--violet); }
+.card:hover .card-img-placeholder svg { color: var(--laser-red); }
 .card-body { padding: 1.1rem; display: flex; flex-direction: column; gap: 0.65rem; flex: 1; }
 .card-title {
   font-family: var(--font-display);
@@ -424,13 +427,13 @@ canvas#scatter-plot {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   background: rgba(124,106,247,0.1);
-  color: var(--violet);
+  color: var(--laser-red);
   border: 1px solid rgba(124,106,247,0.2);
 }
 .card-params { display: flex; flex-direction: column; gap: 0.4rem; margin-top: auto; padding-top: 0.5rem; border-top: 1px solid var(--border); }
 .param-chip { display: flex; align-items: center; gap: 0.5rem; }
 .param-label { font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono); width: 90px; flex-shrink: 0; }
 .param-bar { flex: 1; height: 3px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
-.param-fill { height: 100%; background: var(--violet); border-radius: 2px; transition: width 0.3s; }
+.param-fill { height: 100%; background: var(--laser-red); border-radius: 2px; transition: width 0.3s; }
 .param-val { font-size: 0.7rem; font-family: var(--font-mono); color: var(--blue); width: 1.5rem; text-align: right; }
 </style>
