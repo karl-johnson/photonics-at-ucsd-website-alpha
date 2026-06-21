@@ -8,12 +8,13 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title={project.title} description={project.tagline}>
   <div class="project-page">
 
     <div class="back-row">
-      <a href="/" class="back-link">← All Projects</a>
+      <a href={`${base}/`} class="back-link">← All Projects</a>
     </div>
 
     <header class="project-header">

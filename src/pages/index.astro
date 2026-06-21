@@ -5,6 +5,7 @@ import parameters from '../data/parameters.json';
 
 const projectsJson = JSON.stringify(projects);
 const parametersJson = JSON.stringify(parameters);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title="Projects">
   <div class="page">
@@ -50,7 +51,7 @@ const parametersJson = JSON.stringify(parameters);
       <h2>All Projects <span class="count">{projects.length}</span></h2>
       <div class="cards-grid" id="cards-grid">
         {projects.map(project => (
-          <a href={`/projects/${project.id}`} class="card" data-id={project.id} style="text-decoration: none">
+          <a href={`${base}/projects/${project.id}`} class="card" data-id={project.id}>
             <div class="card-img-placeholder">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
                 <circle cx="12" cy="12" r="3"/>
@@ -89,7 +90,7 @@ const parametersJson = JSON.stringify(parameters);
   </div>
 </BaseLayout>
 
-<script define:vars={{ projectsJson, parametersJson }}>
+<script define:vars={{ projectsJson, parametersJson, base }}>
 const projects = JSON.parse(projectsJson);
 const parameters = JSON.parse(parametersJson);
 
@@ -255,7 +256,7 @@ canvas.addEventListener('click', (e) => {
   const mx = e.clientX - rect.left;
   const my = e.clientY - rect.top;
   const hit = getHitProject(mx, my);
-  if (hit) window.location.href = `/projects/${hit.id}`;
+  if (hit) window.location.href = `${base}/projects/${hit.id}`;
 });
 
 xSelect.addEventListener('change', drawPlot);

@@ -7,6 +7,13 @@ const { title, description = "Open-source optics projects for educational outrea
 const currentPath = Astro.url.pathname;
 import { Image } from 'astro:assets';
 import logoImage from '../assets/logo.svg'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // strip trailing slash if present
+const isActive = (path: string) => {
+  const normalize = (p: string) => p.replace(/\/+$/, '') || '/';
+  return normalize(currentPath) === normalize(path);
+};
+
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -96,13 +103,13 @@ import logoImage from '../assets/logo.svg'
 </head>
 <body>
   <nav>
-    <a href="/" class="nav-logo">
+    <a href={`${base}/`} class="nav-logo">
 	  <Image src={logoImage} width="50" height="50" alt="Logo"/>
       Photonics Society<span class="logo-accent">@</span>UCSD
     </a>
     <div class="nav-links">
-      <a href="/" class={currentPath === "/" ? "active" : ""}>Projects</a>
-      <a href="/about" class={currentPath === "/about" ? "active" : ""}>About</a>
+      <a href={`${base}/`} class={isActive(`${base}/`) ? "active" : ""}>Projects</a>
+      <a href={`${base}/about`} class={isActive(`${base}/about`) ? "active" : ""}>About</a>
     </div>
   </nav>
   <main>
